@@ -24,8 +24,28 @@ class _FavoritesViewState extends ConsumerState<FavoritesView> {
     final favoriteMovies = ref.watch(favoriteMoviesProvider);
     final myMovieList = favoriteMovies.values.toList();
 
+    final colorPrimary = Theme.of(context).colorScheme.primary;
+
+    if(myMovieList.isEmpty) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.favorite_border, size: 100, color: colorPrimary),
+              const Text('No tienes peliculas favoritas')
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
-      body: MovieMasonry(movies: myMovieList)
+      body: MovieMasonry(
+        movies: myMovieList,
+        loadNextPage: () => 
+          ref.read(favoriteMoviesProvider.notifier).loadNextPage(),
+      )
     );
   }
 }
